@@ -8,7 +8,7 @@ const Vector = types.Vector;
 const Matrix = types.Matrix;
 const Value  = types.Value;
 
-pub fn Network(comptime L: [] const usize) type {
+pub fn Network(comptime L: [] const usize, comptime A: anytype) type {
 
     return struct {
 
@@ -50,7 +50,7 @@ pub fn Network(comptime L: [] const usize) type {
                 const out = self.getLayer(i);
                 const weights = self.getWeights(i);
 
-                out.* = weights.mul(aug);
+                out.* = A(L[i], weights.mul(aug));
             }
         }
 

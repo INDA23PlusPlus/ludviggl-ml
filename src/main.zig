@@ -1,9 +1,10 @@
 
-const std     = @import("std");
-const Data    = @import("Data.zig");
-const Network = @import("network.zig").Network;
-const types   = @import("types.zig");
-const Value   = types.Value;
+const std        = @import("std");
+const Data       = @import("Data.zig");
+const Network    = @import("network.zig").Network;
+const types      = @import("types.zig");
+const activation = @import("activation.zig");
+const Value      = types.Value;
 
 const palette = "$@B%8&WM#*oahkbdpqwmZO0QLCJUYXzcvunxrjft/\\|()1{}[]?-_+~<>i!lI;:,\"^`'. ";
 
@@ -39,7 +40,8 @@ pub fn main() !void {
 
     std.debug.print("\nYou should be seeing a {d}\n", .{ data.training_labels.items[test_id], });
 
-    var net = try Network(&[_] usize { 3, 5, 5, 10, }).init(allocator);
+    const layer_sizes = &[_] usize { 28 * 28, 5, 5, 10, };
+    var net = try Network(layer_sizes, activation.ReLU).init(allocator);
     defer _ = net.deinit();
 
     net.forward();
