@@ -41,7 +41,7 @@ pub fn main() !void {
     std.debug.print("\nYou should be seeing a {d}\n", .{ data.training_labels.items[test_id], });
 
     const layer_sizes = &[_] usize { 28 * 28, 5, 5, 10, };
-    var net = try Network(layer_sizes, activation.ReLU).init(allocator);
+    var net = try Network(layer_sizes, activation.ReLU, activation.softmax).init(allocator);
     defer _ = net.deinit();
 
     var rng = std.rand.DefaultPrng.init(69);

@@ -8,7 +8,7 @@ const Vector = types.Vector;
 const Matrix = types.Matrix;
 const Value  = types.Value;
 
-pub fn Network(comptime L: [] const usize, comptime A: anytype) type {
+pub fn Network(comptime L: [] const usize, comptime A: anytype, comptime O: anytype) type {
 
     return struct {
 
@@ -58,7 +58,9 @@ pub fn Network(comptime L: [] const usize, comptime A: anytype) type {
                 const out = self.getLayer(i);
                 const weights = self.getWeights(i);
 
-                out.* = A(L[i], weights.mul(aug));
+                const act = if (i < L.len - 1) A else O;
+
+                out.* = act(L[i], weights.mul(aug));
             }
         }
 
