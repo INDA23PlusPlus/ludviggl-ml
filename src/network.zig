@@ -39,6 +39,14 @@ pub fn Network(comptime L: [] const usize, comptime A: anytype) type {
             return self.arena.reset(.free_all);
         }
 
+        pub fn setInput(self: *Self, in: [] const Value) !void {
+            if (in.len != L[0]) return error.LayerSizeMismatch;
+            const layer = self.getLayer(0);
+            for (0..L[0]) |i| {
+                layer[i] = in[i];
+            }
+        }
+
         pub fn forward(self: *Self) void {
 
             inline for (1..L.len) |i| {
@@ -51,6 +59,21 @@ pub fn Network(comptime L: [] const usize, comptime A: anytype) type {
                 const weights = self.getWeights(i);
 
                 out.* = A(L[i], weights.mul(aug));
+            }
+        }
+
+        pub fn err(self: *Self, target: Vector(L[L.len - 1])) Value {
+            var err_v = target - self.getLayer(L.len - 1).*;
+            return @reduce(.Add, err_v * err_v);
+        }
+
+        pub fn randomize(self: *Self, rng: anytype) void {
+            inline for (1..L.len) |i| {
+                for (&self.getWeights(i).data) |*r| {
+                    for (0..L[i - 1] + 1) |j| {
+                        r[j] = 2.0 * rng.random().float(Value) - 1.0;
+                    }
+                }
             }
         }
 

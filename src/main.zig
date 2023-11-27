@@ -44,5 +44,12 @@ pub fn main() !void {
     var net = try Network(layer_sizes, activation.ReLU).init(allocator);
     defer _ = net.deinit();
 
+    var rng = std.rand.DefaultPrng.init(69);
+    net.randomize(&rng);
+
+    try net.setInput(Data.imageSlice(&data.training_data, 0));
+
     net.forward();
+    const err = net.err(.{ 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, });
+    std.debug.print("Error: {e}\n", .{ err, });
 }
