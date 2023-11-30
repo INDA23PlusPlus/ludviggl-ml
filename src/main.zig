@@ -11,7 +11,7 @@ const Vector     = types.Vector;
 
 const layer_spec        = &[_] usize { 28 * 28, 16, 16, 10, };
 const batch_size: usize = 50;
-const epochs:     usize = 250;
+const epochs:     usize = 50;
 
 fn digitVector(d: usize) Vector(10) {
     var result: Vector(10) = @splat(0);
@@ -38,7 +38,7 @@ pub fn main() !void {
 
     std.debug.print("Training size: {d}, Test size: {d}\n", .{ data.trainingSize(), data.testSize(), });
 
-    const layer_sizes = &[_] usize { 28 * 28, 5, 5, 10, };
+    const layer_sizes = &[_] usize { 28 * 28, 16, 10, };
     var net = try Network(
         layer_sizes,
         activation.ReLU,
